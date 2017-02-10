@@ -1,4 +1,4 @@
-# This is my individual project:
+# Cat & Dog Image Classification
 This project is for classify image for cat and dog
 
 # Requirement:
