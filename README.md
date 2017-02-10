@@ -12,4 +12,6 @@ This project is for classify image for cat and dog
         - header (filename, label)
         - content (filename, label = cat, dog)
 
+dataset can be download from https://www.kaggle.com/c/dogs-vs-cats
+
 
