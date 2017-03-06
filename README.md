@@ -16,4 +16,5 @@ dataset can be download from https://www.kaggle.com/c/dogs-vs-cats
 
 #### Change dataset into tensor
 we follow this tutorial for changing image into tensor https://gist.github.com/eerwitt/518b0c9564e500b4b50f
+we also follow this tutorial https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/how_tos/reading_data/convert_to_records.py
 

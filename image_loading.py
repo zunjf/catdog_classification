@@ -9,7 +9,6 @@ _, image_file = image_reader.read(filename_que)
 
 image = tf.image.decode_jpeg(image_file)
 image = tf.image.resize_images(image, [224, 224])
-image.set_shape((224, 224, 3))
 
 with tf.Session() as sess:
     tf.initialize_all_variables().run()
