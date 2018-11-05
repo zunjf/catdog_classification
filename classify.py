@@ -6,6 +6,8 @@ from tqdm import tqdm
 import tensorflow as tf 
 import matplotlib.pyplot as plt
 
+from tensorflow import keras
+
 folder_data = "dataset"
 dataset_name = "kaggle"
 
@@ -26,7 +28,51 @@ def one_hot_label(img):
     
     return l
 
-def train_data_with_label():
+def data_preparation_with_label(data_path):
     train_images = []
-    
-    
+
+    for i in tqdm(os.listdir(data_path)):
+        path = os.path.join(data_path, i)
+        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        img = cv2.resize(img, (64, 64))
+        train_images.append([np.array(img), one_hot_label(i)])
+    shuffle(train_images)
+
+    return train_images
+
+training_images = data_preparation_with_label(path_train)
+testing_images  = data_preparation_with_label(path_test)
+
+# Data
+tr_img_data = np.array([i[0] for i in training_images]).reshape(-1, 64, 64, 1)
+ts_img_data = np.array([i[0] for i in testing_images]).reshape(-1, 64, 64, 1)
+
+# Label
+tr_label = np.array([i[1] for i in training_images])
+ts_label = np.array([i[1] for i in testing_images])
+
+# Model architecture
+model = keras.Sequential()
+
+model.add(keras.layers.InputLayer(input_shape=[64, 64, 1]))
+model.add(keras.layers.Conv2D(filters=32, kernel_size=(5,5), padding='same', activation='relu'))
+model.add(keras.layers.MaxPool2D(pool_size=(5,5), padding='same'))
+
+model.add(keras.layers.Conv2D(filters=64, kernel_size=(5,5), padding='same', activation='relu'))
+model.add(keras.layers.MaxPool2D(pool_size=(5,5), padding='same'))
+
+model.add(keras.layers.Conv2D(filters=128, kernel_size=(5,5), padding='same', activation='relu'))
+model.add(keras.layers.MaxPool2D(pool_size=(5,5), padding='same'))
+
+model.add(keras.layers.Dropout(0.25))
+model.add(keras.layers.Flatten())
+model.add(keras.layers.Dense(512, activation='relu'))
+model.add(keras.layers.Dropout(0.5))
+model.add(keras.layers.Dense(2, activation='softmax'))
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model.summary()
+
+model.fit(x=tr_img_data, y=tr_label, 
+          epochs=200, validation_data=(ts_img_data, ts_label),
+          batch_size=100)
