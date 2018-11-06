@@ -81,3 +81,9 @@ loss, acc = model.evaluate(ts_img_data, ts_label)
 print("trained model directly, accuracy : {:5.2f}%".format(acc*100))
 
 model.save('save/cat_dog.h5')
+
+cp_path = 'save/model-{epoch:04d}.ckpt'
+
+cp_callback = keras.callbacks.ModelCheckpoint(cp_path,
+                                              save_weights_only=True,
+                                              verbose=1, period=5)
