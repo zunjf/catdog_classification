@@ -74,9 +74,10 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 model.summary()
 
 model.fit(x=tr_img_data, y=tr_label, 
-          epochs=200, validation_data=(ts_img_data, ts_label),
+          epochs=100, validation_data=(ts_img_data, ts_label),
           batch_size=100)
 
 loss, acc = model.evaluate(ts_img_data, ts_label)
 print("trained model directly, accuracy : {:5.2f}%".format(acc*100))
 
+model.save('save/cat_dog.h5')
