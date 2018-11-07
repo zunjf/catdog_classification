@@ -73,17 +73,18 @@ model.add(keras.layers.Dense(2, activation='softmax'))
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
+cp_path = 'save/model.ckpt'
+
+cp_callback = keras.callbacks.ModelCheckpoint(cp_path,
+                                              save_weights_only=True,
+                                              verbose=1)
+
 model.fit(x=tr_img_data, y=tr_label, 
           epochs=100, validation_data=(ts_img_data, ts_label),
-          batch_size=100)
+          batch_size=100, callbacks=[cp_callback])
 
 loss, acc = model.evaluate(ts_img_data, ts_label)
 print("trained model directly, accuracy : {:5.2f}%".format(acc*100))
 
 model.save('save/cat_dog.h5')
 
-cp_path = 'save/model-{epoch:04d}.ckpt'
-
-cp_callback = keras.callbacks.ModelCheckpoint(cp_path,
-                                              save_weights_only=True,
-                                              verbose=1, period=5)
