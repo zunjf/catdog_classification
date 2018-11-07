@@ -73,18 +73,29 @@ model.add(keras.layers.Dense(2, activation='softmax'))
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
-cp_path = 'save/model.ckpt'
+# cp_path = 'save/model.ckpt'
 
-cp_callback = keras.callbacks.ModelCheckpoint(cp_path,
-                                              save_weights_only=True,
-                                              verbose=1)
+# cp_callback = keras.callbacks.ModelCheckpoint(cp_path,
+#                                               save_weights_only=True,
+#                                               verbose=1)
 
 model.fit(x=tr_img_data, y=tr_label, 
           epochs=100, validation_data=(ts_img_data, ts_label),
-          batch_size=100, callbacks=[cp_callback])
+          batch_size=2)
 
 loss, acc = model.evaluate(ts_img_data, ts_label)
 print("trained model directly, accuracy : {:5.2f}%".format(acc*100))
 
 model.save('save/cat_dog.h5')
 
+input_names = [node.op.name for node in model.inputs]
+output_names = [node.op.name for node in model.outputs]
+print(input_names, output_names)
+# sess = tf.keras.backend.get_session()
+# frozen_def = tf.graph_util.convert_variables_to_constants(
+#     sess, sess.graph_def, output_names)
+
+# tflite_model = tf.contrib.lite.toco_convert(
+#     frozen_def, [inputs], output_names)
+# with tf.gfile.GFile('save/model.tflite', 'wb') as f:
+#     f.write(tflite_model)
