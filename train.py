@@ -80,8 +80,8 @@ model.summary()
 #                                               verbose=1)
 
 model.fit(x=tr_img_data, y=tr_label, 
-          epochs=100, validation_data=(ts_img_data, ts_label),
-          batch_size=2)
+          epochs=2, validation_data=(ts_img_data, ts_label),
+          batch_size=200)
 
 loss, acc = model.evaluate(ts_img_data, ts_label)
 print("trained model directly, accuracy : {:5.2f}%".format(acc*100))
