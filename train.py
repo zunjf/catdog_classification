@@ -82,7 +82,7 @@ model.summary()
 #                                               verbose=1)
 
 model.fit(x=tr_img_data, y=tr_label, 
-          epochs=2, validation_data=(ts_img_data, ts_label),
+          epochs=200, validation_data=(ts_img_data, ts_label),
           batch_size=200)
 
 loss, acc = model.evaluate(ts_img_data, ts_label)
@@ -94,9 +94,9 @@ converter = tf.contrib.lite.TocoConverter.from_keras_model_file("save/cat_dog.h5
 tflite_model = converter.convert()
 open("save/converted_model.tflite", "wb").write(tflite_model)
 
-# input_names = [node.op.name for node in model.inputs]
-# output_names = [node.op.name for node in model.outputs]
-# print(input_names, output_names)
+input_names = [node.op.name for node in model.inputs]
+output_names = [node.op.name for node in model.outputs]
+print(input_names, output_names)
 
 # sess = tf.keras.backend.get_session()
 # frozen_def = tf.graph_util.convert_variables_to_constants(
