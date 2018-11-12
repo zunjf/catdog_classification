@@ -54,8 +54,10 @@ ts_label = np.array([i[1] for i in testing_images])
 # Model architecture
 model = keras.Sequential()
 
-model.add(keras.layers.InputLayer(input_shape=[64, 64, 1]))
-model.add(keras.layers.Conv2D(filters=32, kernel_size=(5,5), padding='same', activation='relu'))
+# model.add(keras.layers.InputLayer(input_shape=[64, 64, 1]))
+model.add(keras.layers.Conv2D(filters=32, kernel_size=(5,5), 
+                               padding='same', activation='relu',
+                               input_shape=(64, 64, 1)))
 model.add(keras.layers.MaxPool2D(pool_size=(5,5), padding='same'))
 
 model.add(keras.layers.Conv2D(filters=64, kernel_size=(5,5), padding='same', activation='relu'))
@@ -88,14 +90,19 @@ print("trained model directly, accuracy : {:5.2f}%".format(acc*100))
 
 model.save('save/cat_dog.h5')
 
-input_names = [node.op.name for node in model.inputs]
-output_names = [node.op.name for node in model.outputs]
-print(input_names, output_names)
+converter = tf.contrib.lite.TocoConverter.from_keras_model_file("save/cat_dog.h5")
+tflite_model = converter.convert()
+open("save/converted_model.tflite", "wb").write(tflite_model)
+
+# input_names = [node.op.name for node in model.inputs]
+# output_names = [node.op.name for node in model.outputs]
+# print(input_names, output_names)
+
 # sess = tf.keras.backend.get_session()
 # frozen_def = tf.graph_util.convert_variables_to_constants(
 #     sess, sess.graph_def, output_names)
 
 # tflite_model = tf.contrib.lite.toco_convert(
-#     frozen_def, [inputs], output_names)
+#     frozen_def, input_names, output_names)
 # with tf.gfile.GFile('save/model.tflite', 'wb') as f:
 #     f.write(tflite_model)
